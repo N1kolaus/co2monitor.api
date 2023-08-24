@@ -1,22 +1,58 @@
 package main
 
 import (
+	"fmt"
+	"io"
+	"net/http"
+	"os"
+	"time"
+
 	"github.com/fminister/co2monitor.api/db"
 	"github.com/fminister/co2monitor.api/initializers"
+	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )
 
-func main() {
+func init() {
 	initializers.LoadEnvVariables()
 	db.ConnectToDb()
+}
 
-	r := gin.Default()
-	r.GET("/ping", func(c *gin.Context) {
-		c.JSON(200, gin.H{
-			"message": "pong",
-		})
+func main() {
+	f, _ := os.Create("logs/gin.log")
+	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+
+	app := gin.New()
+
+	app.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
+		return fmt.Sprintf("[%s] - %s \"%s %s %s %d %s %s\"\n",
+			param.TimeStamp.Format(time.RFC1123),
+			param.ClientIP,
+			param.Method,
+			param.Path,
+			param.Request.Proto,
+			param.StatusCode,
+			param.Latency,
+			param.ErrorMessage,
+		)
+	}))
+	app.Use(gin.Recovery())
+
+	app.Use(gzip.Gzip(gzip.DefaultCompression))
+
+	router := app.Group("/api")
+
+	// routes.AddRoutes(router)
+
+	router.GET("/ping", func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "pong"})
 	})
-	r.Run()
+
+	app.NoRoute(func(c *gin.Context) {
+		c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
+	})
+
+	app.Run() // listen and serve on 0.0.0.0:8080
 }
 
 // CompileDaemon -command="./co2monitor.api
