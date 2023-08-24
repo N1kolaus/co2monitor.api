@@ -1,6 +1,7 @@
 package routes
 
 import (
+	"github.com/fminister/co2monitor.api/controllers"
 	"github.com/fminister/co2monitor.api/middleware"
 	"github.com/gin-gonic/gin"
 )
@@ -10,6 +11,7 @@ func locationRoutes(superRoute *gin.RouterGroup) {
 	{
 		locationRouter.Use(middleware.RequireAuth)
 		{
+			locationRouter.GET("/", controllers.GetLocation)
 		}
 	}
 }
