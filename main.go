@@ -52,7 +52,7 @@ func main() {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
 	})
 
-	app.Run() // listen and serve on 0.0.0.0:8080
+	app.Run()
 }
 
 // CompileDaemon -command="./co2monitor.api
