@@ -1,0 +1,38 @@
+version: '3.9'
+
+services:
+    postgres:
+        image: postgres
+        container_name: ${PG_CONTAINER_NAME}
+        restart: unless-stopped
+        environment:
+          - POSTGRES_USER=${POSTGRES_USER}
+          - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+          - POSTGRES_DB=${POSTGRES_DB}
+        volumes:
+          - ${PGDATA}:/var/lib/postgresql/data
+        networks:
+          - internal_network
+
+    go-web-api:
+        build:
+          context: .
+          dockerfile: Dockerfile
+        container_name: co2monitor.api
+        environment:
+          DATABASE_URL: ${DATABASE_URL}
+        networks:
+          - internal_network
+          - traefik_web
+        labels:
+          - "traefik.http.routers.go-web.rule=Host(`co2.leyrer.io`)"
+        restart: always
+
+networks:
+  internal_network:
+    driver: bridge
+  traefik_web:
+    external: true
+
+volumes:
+  postgres_data:
