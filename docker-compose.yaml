@@ -26,7 +26,10 @@ services:
           - traefik_web
         labels:
           - "traefik.http.routers.go-web.rule=Host(`co2.leyrer.io`)"
-        restart: always
+        restart: unless-stopped
+        depends_on:
+          - postgres
+
 
 networks:
   internal_network:
