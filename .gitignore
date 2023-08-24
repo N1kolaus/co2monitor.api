@@ -10,6 +10,9 @@ pkg/*
 # goop - go package manager
 .vendor
 
+# Database
+database/
+
 
 
 #############################
