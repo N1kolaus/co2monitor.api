@@ -28,7 +28,7 @@ func ConnectToDb() {
 	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{
-			TablePrefix:   "co2monitor", // schema name
+			TablePrefix:   "co2monitor.", // schema name
 			SingularTable: false,
 		},
 	})
@@ -39,8 +39,6 @@ func ConnectToDb() {
 
 	log.Println("connected")
 	db.Logger = logger.Default.LogMode(logger.Info)
-	log.Println("running migrations")
-	// db.AutoMigrate(&models.Book{})
 
 	DB = DbInstance{
 		Db: db,
