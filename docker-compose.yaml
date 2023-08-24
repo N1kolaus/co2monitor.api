@@ -29,6 +29,8 @@ services:
         restart: unless-stopped
         depends_on:
           - postgres
+        volumes:
+          - api_logs:/app/logs
 
 
 networks:
@@ -39,3 +41,4 @@ networks:
 
 volumes:
   postgres_data:
+  api_logs:

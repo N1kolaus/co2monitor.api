@@ -30,6 +30,8 @@ services:
           - 8080:8080
         depends_on:
           - postgres
+        volumes:
+          - api_logs:/app/logs
 
 networks:
   app_network:
@@ -37,3 +39,4 @@ networks:
 
 volumes:
   postgres_data:
+  api_logs:
