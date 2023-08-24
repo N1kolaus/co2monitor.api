@@ -3,12 +3,14 @@ package main
 import (
 	"fmt"
 	"io"
+	"log"
 	"net/http"
 	"os"
 	"time"
 
 	"github.com/fminister/co2monitor.api/db"
 	"github.com/fminister/co2monitor.api/initializers"
+	"github.com/fminister/co2monitor.api/routes"
 	"github.com/gin-contrib/gzip"
 	"github.com/gin-gonic/gin"
 )
@@ -22,6 +24,7 @@ func init() {
 func main() {
 	f, _ := os.Create("logs/gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
 	app := gin.New()
 
@@ -38,16 +41,10 @@ func main() {
 		)
 	}))
 	app.Use(gin.Recovery())
-
 	app.Use(gzip.Gzip(gzip.DefaultCompression))
 
 	router := app.Group("/api")
-
-	// routes.AddRoutes(router)
-
-	router.GET("/ping", func(c *gin.Context) {
-		c.JSON(http.StatusOK, gin.H{"message": "pong"})
-	})
+	routes.AddRoutes(router)
 
 	app.NoRoute(func(c *gin.Context) {
 		c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
