@@ -23,9 +23,8 @@ func TestDbGetLocation_ShouldGetListOfLocations(t *testing.T) {
 		},
 	}
 
-	expectedSQL := "SELECT (.+) FROM \"locations\""
 	rows := sqlmock.NewRows([]string{"id", "name"}).AddRow(1, expected[0].Name).AddRow(2, expected[1].Name)
-	mock.ExpectQuery(expectedSQL).WillReturnRows(rows)
+	mock.ExpectQuery(`SELECT (.+) FROM "locations"`).WillReturnRows(rows)
 
 	result, err := db_calls.GetLocation(db)
 
@@ -35,20 +34,72 @@ func TestDbGetLocation_ShouldGetListOfLocations(t *testing.T) {
 	assert.Equal(t, expected[1].Name, result[1].Name)
 }
 
-func TestDbGetLocationById(t *testing.T) {
+func TestDbGetLocationBySearch_ShouldFindById(t *testing.T) {
 	sqlDB, db, mock := tests.DbMock(t)
 	defer sqlDB.Close()
 
-	expected := models.Location{
-		Name: "test location",
+	expected := []models.Location{
+		{
+			Name: "test location 1",
+		},
+		{
+			Name: "test location 2",
+		},
 	}
 
-	expectedSQL := "SELECT (.+) FROM \"locations\" WHERE \"locations\".\"id\" = (.+) AND \"locations\".\"deleted_at\" IS NULL ORDER BY \"locations\".\"id\" LIMIT 1"
-	rows := sqlmock.NewRows([]string{"id", "name"}).AddRow(1, expected.Name)
-	mock.ExpectQuery(expectedSQL).WillReturnRows(rows)
+	rows := sqlmock.NewRows([]string{"id", "name"}).AddRow(2, expected[1].Name)
+	mock.ExpectQuery(`SELECT (.+) FROM "locations"`).WillReturnRows(rows)
 
-	result, err := db_calls.GetLocationById(db, "1")
+	result, err := db_calls.GetLocationBySearch(db, "2", "")
 
 	assert.NoError(t, err)
-	assert.Equal(t, expected.Name, result.Name)
+	assert.Equal(t, 1, len(result))
+	assert.Equal(t, expected[1].Name, result[0].Name)
+}
+
+func TestDbGetLocationBySearch_ShouldFindByName(t *testing.T) {
+	sqlDB, db, mock := tests.DbMock(t)
+	defer sqlDB.Close()
+
+	expected := []models.Location{
+		{
+			Name: "test location 1",
+		},
+		{
+			Name: "test location 2",
+		},
+	}
+
+	rows := sqlmock.NewRows([]string{"id", "name"}).AddRow(2, expected[1].Name)
+	mock.ExpectQuery(`SELECT (.+) FROM "locations"`).WillReturnRows(rows)
+
+	result, err := db_calls.GetLocationBySearch(db, "", expected[1].Name)
+
+	assert.NoError(t, err)
+	assert.Len(t, result, 1)
+	assert.Equal(t, expected[1].Name, result[0].Name)
+}
+
+func TestDbGetLocationBySearch_ShouldFindByIdAndName(t *testing.T) {
+	sqlDB, db, mock := tests.DbMock(t)
+	defer sqlDB.Close()
+
+	expected := []models.Location{
+		{
+			Name: "test location 1",
+		},
+		{
+			Name: "test location 2",
+		},
+	}
+
+	rows := sqlmock.NewRows([]string{"id", "name"}).AddRow(1, expected[0].Name).AddRow(2, expected[1].Name)
+	mock.ExpectQuery(`SELECT (.+) FROM "locations"`).WillReturnRows(rows)
+
+	result, err := db_calls.GetLocationBySearch(db, "1", expected[1].Name)
+
+	assert.NoError(t, err)
+	assert.Len(t, result, 2)
+	assert.Equal(t, expected[0].Name, result[0].Name)
+	assert.Equal(t, expected[1].Name, result[1].Name)
 }

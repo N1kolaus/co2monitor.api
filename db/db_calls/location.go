@@ -13,10 +13,14 @@ func GetLocation(db *gorm.DB) ([]models.Location, error) {
 	return locations, err
 }
 
-func GetLocationById(db *gorm.DB, locationId string) (models.Location, error) {
-	var location models.Location
+func GetLocationBySearch(db *gorm.DB, id string, name string) ([]models.Location, error) {
+	var locations []models.Location
 
-	err := db.First(&location, locationId).Error
+	if id == "" {
+		id = "0"
+	}
 
-	return location, err
+	err := db.Where("ID = ?", id).Or("name = ?", name).Find(&locations).Error
+
+	return locations, err
 }

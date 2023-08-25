@@ -25,3 +25,20 @@ func (a *APIEnv) GetLocations(c *gin.Context) {
 		"location": locations,
 	})
 }
+
+func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
+	id := c.Query("id")
+	name := c.Query("name")
+
+	locations, err := db_calls.GetLocationBySearch(a.DB, id, name)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{
+			"error": err.Error(),
+		})
+		return
+	}
+
+	c.JSON(http.StatusOK, gin.H{
+		"locations": locations,
+	})
+}
