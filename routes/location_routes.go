@@ -9,7 +9,7 @@ import (
 func locationRoutes(superRoute *gin.RouterGroup) {
 	locationRouter := superRoute.Group("/location")
 	{
-		locationRouter.Use(middleware.RequireAuth)
+		locationRouter.Use(middleware.RequireXAPIKey)
 		{
 			locationRouter.GET("/", controllers.GetLocation)
 		}
