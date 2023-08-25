@@ -8,14 +8,17 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func RequireXAPIKey(c *gin.Context) {
-	APIKey := c.Request.Header.Get("X-API-KEY")
+func RequireAuth(expectedAPIKeyEnvName string) gin.HandlerFunc {
+	return func(c *gin.Context) {
+		expectedAPIKey := os.Getenv(expectedAPIKeyEnvName)
+		APIKey := c.Request.Header.Get("X-API-KEY")
 
-	if APIKey == "" || APIKey != os.Getenv("X_API_KEY") {
-		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-		log.Printf("APIKey was empty or invalid: [%s]", APIKey)
-		return
+		if APIKey == "" || APIKey != expectedAPIKey {
+			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+			log.Printf("APIKey was empty or invalid: [%s]", APIKey)
+			return
+		}
+
+		c.Next()
 	}
-
-	c.Next()
 }

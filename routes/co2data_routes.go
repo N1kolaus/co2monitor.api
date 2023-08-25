@@ -9,9 +9,13 @@ import (
 func co2DataRoutes(superRoute *gin.RouterGroup) {
 	co2DataRouter := superRoute.Group("/co2data")
 	{
-		co2DataRouter.Use(middleware.RequireXAPIKey)
+		co2DataRouter.Use(middleware.RequireAuth("X_API_KEY"))
 		{
 			co2DataRouter.GET("/", controllers.GetCo2Data)
+		}
+		co2DataRouter.Use(middleware.RequireAuth("X_API_KEY_POST"))
+		{
+			co2DataRouter.POST("/", controllers.GetCo2Data)
 		}
 	}
 }
