@@ -1,10 +1,10 @@
 package middleware
 
 import (
-	"log"
 	"net/http"
 	"os"
 
+	"github.com/charmbracelet/log"
 	"github.com/gin-gonic/gin"
 )
 
@@ -15,7 +15,7 @@ func RequireAuth(expectedAPIKeyEnvName string) gin.HandlerFunc {
 
 		if APIKey == "" || APIKey != expectedAPIKey {
 			c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-			log.Printf("APIKey was empty or invalid: [%s]", APIKey)
+			log.Infof(`API-Key was not found or not valid. API-Key: "%s"; URL: "%s"`, APIKey, c.Request.URL)
 			return
 		}
 

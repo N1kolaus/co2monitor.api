@@ -19,5 +19,9 @@ func locationRoutes(superRoute *gin.RouterGroup) {
 			locationRouter.GET("/", controllers.GetLocations)
 			locationRouter.GET("/search", controllers.GetLocationBySearch)
 		}
+		locationRouter.Use(middleware.RequireAuth("X_API_KEY_POST"))
+		{
+			locationRouter.POST("/new", controllers.CreateLocation)
+		}
 	}
 }
