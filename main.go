@@ -3,10 +3,11 @@ package main
 import (
 	"fmt"
 	"io"
-	"log"
 	"net/http"
 	"os"
 	"time"
+
+	"github.com/charmbracelet/log"
 
 	"github.com/fminister/co2monitor.api/db"
 	"github.com/fminister/co2monitor.api/initializers"
@@ -24,6 +25,10 @@ func init() {
 func main() {
 	f, _ := os.Create("logs/gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
+
+	log.SetTimeFormat(fmt.Sprintf("[%s]", time.RFC1123))
+	log.SetReportCaller(true)
+	log.SetReportTimestamp(true)
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
 	app := gin.New()
