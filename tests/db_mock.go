@@ -1,28 +1,63 @@
 package tests
 
 import (
-	"database/sql"
 	"testing"
 
-	"github.com/DATA-DOG/go-sqlmock"
-	"gorm.io/driver/postgres"
+	"github.com/glebarez/sqlite"
+	"github.com/stretchr/testify/require"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
+
+	"github.com/fminister/co2monitor.api/models"
 )
 
-func DbMock(t *testing.T) (*sql.DB, *gorm.DB, sqlmock.Sqlmock) {
-	sqldb, mock, err := sqlmock.New()
-	if err != nil {
-		t.Fatal(err)
-	}
-	gormdb, err := gorm.Open(postgres.New(postgres.Config{
-		Conn: sqldb,
-	}), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Info),
-	})
+var Locations = []models.Location{
+	{
+		Name: "test location 1",
+	},
+	{
+		Name: "test location 2",
+	},
+}
 
-	if err != nil {
-		t.Fatal(err)
-	}
-	return sqldb, gormdb, mock
+var CO2 = []models.Co2Data{
+	{
+		LocationID: 1,
+		CO2:        1001,
+		Temp:       20.1,
+	},
+	{
+		LocationID: 1,
+		CO2:        2001,
+		Temp:       22.1,
+	},
+	{
+		LocationID: 2,
+		CO2:        1002,
+		Temp:       20.2,
+	},
+	{
+		LocationID: 2,
+		CO2:        2002,
+		Temp:       22.2,
+	},
+}
+
+type BaseFixture struct {
+	Db *gorm.DB
+}
+
+func (f *BaseFixture) Setup(t *testing.T) {
+	var err error
+	f.Db, err = gorm.Open(sqlite.Open(":memory:?_pragma=foreign_keys(1)"), &gorm.Config{})
+	require.NoError(t, err)
+	f.Db.AutoMigrate(&models.Location{}, &models.Co2Data{})
+}
+
+func (f *BaseFixture) Teardown(t *testing.T) {
+	f.Db.Session(&gorm.Session{AllowGlobalUpdate: true}).Delete(&models.Location{}, &models.Co2Data{})
+}
+
+func (f *BaseFixture) AddDummyData(t *testing.T) {
+	f.Db.Create(&Locations)
+	f.Db.Create(&CO2)
 }
