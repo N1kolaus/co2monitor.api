@@ -13,15 +13,19 @@ func locationRoutes(superRoute *gin.RouterGroup) {
 	}
 
 	locationRouter := superRoute.Group("/location")
+
+	// Middleware für POST-Routen, die X_API_KEY_POST benötigen
+	postMiddleware := locationRouter.Group("/")
+	postMiddleware.Use(middleware.RequireAuth("X_API_KEY_POST"))
 	{
-		locationRouter.Use(middleware.RequireAuth("X_API_KEY"))
-		{
-			locationRouter.GET("/", controllers.GetLocations)
-			locationRouter.GET("/search", controllers.GetLocationBySearch)
-		}
-		locationRouter.Use(middleware.RequireAuth("X_API_KEY_POST"))
-		{
-			locationRouter.POST("/new", controllers.CreateLocation)
-		}
+		postMiddleware.POST("/new", controllers.CreateLocation)
+	}
+
+	// Middleware für andere Routen, die X_API_KEY benötigen
+	getMiddleware := locationRouter.Group("/")
+	getMiddleware.Use(middleware.RequireAuth("X_API_KEY"))
+	{
+		getMiddleware.GET("/", controllers.GetLocations)
+		getMiddleware.GET("/search", controllers.GetLocationBySearch)
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/charmbracelet/log"
 
 	"github.com/fminister/co2monitor.api/db/db_calls"
+	ex "github.com/fminister/co2monitor.api/extensions"
 	"github.com/fminister/co2monitor.api/models"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
@@ -54,6 +55,14 @@ func (a *APIEnv) CreateLocation(c *gin.Context) {
 		log.Errorf(`Could parse location from body. Error: "%s"`, err)
 		c.JSON(http.StatusBadRequest, gin.H{
 			"error": "Could parse location from body.",
+		})
+		return
+	}
+
+	if err := ex.Validator([]models.Location{}).Validate(locations); err != nil {
+		log.Errorf(`Could parse location from body. Error: "%s"`, err)
+		c.JSON(http.StatusBadRequest, gin.H{
+			"error": err,
 		})
 		return
 	}
