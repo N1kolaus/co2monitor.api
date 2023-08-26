@@ -24,3 +24,13 @@ func GetLocationBySearch(db *gorm.DB, id string, name string) ([]models.Location
 
 	return locations, err
 }
+
+func CreateLocation(db *gorm.DB, locations []models.Location) ([]models.Location, error) {
+	if len(locations) == 0 {
+		return locations, nil
+	}
+
+	err := db.Create(&locations).Error
+
+	return locations, err
+}
