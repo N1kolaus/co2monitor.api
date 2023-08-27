@@ -19,6 +19,7 @@ func locationRoutes(superRoute *gin.RouterGroup) {
 	adminRouter.Use(middleware.RequireAuth("X_API_KEY_ADMIN"))
 	{
 		adminRouter.POST("/new", controllers.CreateLocation)
+		adminRouter.PATCH("/:id", controllers.UpdateLocation)
 	}
 
 	// Middleware for other routes that require X_API_KEY, i.e. no elevated privileges
