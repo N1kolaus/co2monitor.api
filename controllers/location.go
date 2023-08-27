@@ -11,10 +11,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-// type APIEnv struct {
-// 	DB *gorm.DB
-// }
-
 func (a *APIEnv) GetLocations(c *gin.Context) {
 	locations, err := db_calls.GetLocation(a.DB)
 	if err != nil {
@@ -44,7 +40,7 @@ func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"locations": locations,
+		"location": locations,
 	})
 }
 
@@ -76,7 +72,7 @@ func (a *APIEnv) CreateLocation(c *gin.Context) {
 	}
 
 	c.JSON(http.StatusOK, gin.H{
-		"locations": locations,
+		"location": locations,
 	})
 }
 
