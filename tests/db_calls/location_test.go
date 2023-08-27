@@ -8,6 +8,7 @@ import (
 	"github.com/fminister/co2monitor.api/tests"
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/require"
+	"gorm.io/gorm"
 )
 
 func TestGetLocation_ShouldReturnAllLocations(t *testing.T) {
@@ -126,4 +127,54 @@ func TestCreateLocation(t *testing.T) {
 		assert.Equal(t, 0, len(beforeInsert))
 		assert.Equal(t, len(locationToInsert), len(result))
 	})
+}
+
+func TestUpdateLocation_ShouldUpdateLocation(t *testing.T) {
+	f := tests.BaseFixture{}
+	f.Setup(t)
+	f.AddDummyData(t)
+	defer f.Teardown(t)
+
+	updatedLocation := models.Location{
+		Model: gorm.Model{
+			ID: 1,
+		},
+		Name: "updated location",
+	}
+
+	currentLocation := models.Location{}
+	f.Db.First(&currentLocation, updatedLocation.ID)
+
+	result, err := db_calls.UpdateLocation(f.Db, updatedLocation)
+
+	require.NoError(t, err)
+	assert.Equal(t, currentLocation.Name, tests.Locations[0].Name)
+	assert.Equal(t, updatedLocation.Name, result.Name)
+	assert.NotEqual(t, currentLocation.Name, result.Name)
+	assert.NotEqual(t, currentLocation.UpdatedAt, result.UpdatedAt)
+}
+
+func TestDeleteLocation_ShouldDeleteLocation(t *testing.T) {
+	f := tests.BaseFixture{}
+	f.Setup(t)
+	f.AddDummyData(t)
+	defer f.Teardown(t)
+
+	locationToDelete := models.Location{
+		Model: gorm.Model{
+			ID: 1,
+		},
+	}
+
+	oldLocations := []models.Location{}
+	f.Db.Find(&oldLocations)
+
+	err := db_calls.DeleteLocation(f.Db, locationToDelete)
+
+	newLocations := []models.Location{}
+	f.Db.Find(&newLocations)
+
+	require.NoError(t, err)
+	assert.NotEqual(t, len(oldLocations), len(newLocations))
+	assert.Equal(t, len(oldLocations), len(newLocations)+1)
 }
