@@ -19,14 +19,19 @@ func RequireApiKey(c *gin.Context) {
 		return
 	}
 
-	if (c.Request.Method == http.MethodPost || c.Request.Method == http.MethodPatch || c.Request.Method == http.MethodDelete) && APIKey == adminAPIKey {
-		c.Next()
-		return
-	} else if APIKey == normalAPIKey {
-		c.Next()
-		return
+	switch c.Request.Method {
+	case http.MethodGet:
+		if APIKey == adminAPIKey || APIKey == normalAPIKey {
+			c.Next()
+			return
+		}
+	case http.MethodPost, http.MethodPatch, http.MethodDelete:
+		if APIKey == adminAPIKey {
+			c.Next()
+			return
+		}
 	}
 
 	log.Infof(`Unauthorized API-Key. API-Key: "%s"; URL: "%s"; Method: "%s"; Path: "%s"`, APIKey, c.Request.URL, c.Request.Method, c.FullPath())
-	c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
+	c.AbortWithStatus(http.StatusUnauthorized)
 }
