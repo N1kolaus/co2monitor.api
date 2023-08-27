@@ -121,3 +121,27 @@ func (a *APIEnv) UpdateLocation(c *gin.Context) {
 		"location": location,
 	})
 }
+
+func (a *APIEnv) DeleteLocation(c *gin.Context) {
+	locationId := c.Param("id")
+
+	location, err := db_calls.GetLocationById(a.DB, locationId)
+	if err != nil {
+		log.Errorf(`Could not find location by id. id: "%s"; Error: "%s"`, locationId, err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Could not find location by id.",
+		})
+		return
+	}
+
+	err = db_calls.DeleteLocation(a.DB, location)
+	if err != nil {
+		log.Errorf(`Could not delete location in db. Location: "%#v" Error: "%s"`, location, err)
+		c.JSON(http.StatusNotFound, gin.H{
+			"error": "Could not delete location.",
+		})
+		return
+	}
+
+	c.JSON(http.StatusNoContent, gin.H{})
+}
