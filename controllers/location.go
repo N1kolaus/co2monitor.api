@@ -45,7 +45,7 @@ func (a *APIEnv) CreateLocation(c *gin.Context) {
 	}
 
 	if err := ex.Validator([]models.Location{}).Validate(locations); err != nil {
-		log.Errorf(`Could parse location from body. Error: "%s"`, err)
+		log.Errorf(`Missing values in JSON. Error: "%s"`, err)
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}
@@ -53,7 +53,7 @@ func (a *APIEnv) CreateLocation(c *gin.Context) {
 	locations, err := db_calls.CreateLocation(a.DB, locations)
 	if err != nil {
 		log.Errorf(`Could not create location in db. Locations: "%#v" Error: "%s"`, locations, err)
-		c.JSON(http.StatusNotFound, "Could not create location.")
+		c.JSON(http.StatusBadRequest, "Could not create location. Name already exists.")
 		return
 	}
 
@@ -77,7 +77,7 @@ func (a *APIEnv) UpdateLocation(c *gin.Context) {
 	}
 
 	if err := ex.Validator(models.Location{}).Validate(location); err != nil {
-		log.Errorf(`Could parse location from body. Error: "%s"`, err)
+		log.Errorf(`Missing values in JSON. Error: "%s"`, err)
 		c.JSON(http.StatusBadRequest, err)
 		return
 	}

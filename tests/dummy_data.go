@@ -1,6 +1,10 @@
 package tests
 
-import "github.com/fminister/co2monitor.api/models"
+import (
+	"encoding/json"
+
+	"github.com/fminister/co2monitor.api/models"
+)
 
 var Locations = []models.Location{
 	{
@@ -32,4 +36,22 @@ var CO2 = []models.Co2Data{
 		CO2:        2002,
 		Temp:       22.2,
 	},
+}
+
+func LocationsToJSON(locations []models.Location) []byte {
+	locationsJSON, err := json.Marshal(locations)
+	if err != nil {
+		panic(err)
+	}
+
+	return locationsJSON
+}
+
+func CO2ToJSON(co2 []models.Co2Data) []byte {
+	co2JSON, err := json.Marshal(co2)
+	if err != nil {
+		panic(err)
+	}
+
+	return co2JSON
 }
