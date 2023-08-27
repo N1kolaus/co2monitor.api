@@ -148,6 +148,7 @@ func TestUpdateLocation_ShouldUpdateLocation(t *testing.T) {
 	assert.Equal(t, updatedLocation.Name, result.Name)
 	assert.NotEqual(t, currentLocation.Name, result.Name)
 	assert.NotEqual(t, currentLocation.UpdatedAt, result.UpdatedAt)
+	assert.Greater(t, result.UpdatedAt.Unix(), tests.Locations[0].UpdatedAt.Unix())
 }
 
 func TestDeleteLocation_ShouldDeleteLocation(t *testing.T) {
