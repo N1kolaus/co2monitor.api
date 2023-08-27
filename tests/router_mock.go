@@ -4,17 +4,27 @@ import (
 	"net/http"
 	"net/http/httptest"
 
-	"github.com/fminister/co2monitor.api/controllers"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
 
-func SetupLocationRouter(db *gorm.DB) (*http.Request, *httptest.ResponseRecorder) {
+func SetupLocationRouter(db *gorm.DB, method, route string, handler gin.HandlerFunc) (*http.Request, *httptest.ResponseRecorder) {
 	router := gin.New()
-	api := &controllers.APIEnv{DB: db}
-	router.GET("/", api.GetLocations)
 
-	req, err := http.NewRequest(http.MethodGet, "/", nil)
+	switch method {
+	case http.MethodGet:
+		router.GET(route, handler)
+	case http.MethodPost:
+		router.POST(route, handler)
+	case http.MethodPatch:
+		router.PATCH(route, handler)
+	case http.MethodDelete:
+		router.DELETE(route, handler)
+	default:
+		panic("Unsupported HTTP method")
+	}
+
+	req, err := http.NewRequest(method, route, nil)
 	if err != nil {
 		panic(err)
 	}
