@@ -39,7 +39,7 @@ func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
 	if err != nil {
 		log.Errorf(`Could not find any locations by id or name. id: "%s"; name: "%s"; Error: "%s"`, id, name, err)
 		c.JSON(http.StatusNotFound, gin.H{
-			"error": "Could not find andy locations.",
+			"error": "Could not find any locations.",
 		})
 		return
 	}
