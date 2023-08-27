@@ -7,6 +7,9 @@ import (
 )
 
 func (a *APIEnv) GetCo2DataBySearch(c *gin.Context) {
+
+	// duration, _ := time.ParseDuration(hours)
+
 	c.JSON(http.StatusOK, gin.H{
 		"data": "co2 data",
 	})
