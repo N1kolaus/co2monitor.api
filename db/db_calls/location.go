@@ -1,6 +1,8 @@
 package db_calls
 
 import (
+	"errors"
+
 	"github.com/fminister/co2monitor.api/models"
 	"gorm.io/gorm"
 )
@@ -35,7 +37,7 @@ func GetLocationById(db *gorm.DB, id string) (models.Location, error) {
 
 func CreateLocation(db *gorm.DB, locations []models.Location) ([]models.Location, error) {
 	if len(locations) == 0 {
-		return locations, nil
+		return locations, errors.New("Empty list of locations to insert")
 	}
 
 	err := db.Create(&locations).Error
