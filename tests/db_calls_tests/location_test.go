@@ -117,10 +117,11 @@ func TestCreateLocation_ShouldNotCreateLocation(t *testing.T) {
 
 	locationToInsert := []models.Location{}
 	beforeInsert := []models.Location{}
+	errorMessage := "Empty list of locations to insert"
 	f.Db.Find(&beforeInsert)
 	result, err := db_calls.CreateLocation(f.Db, locationToInsert)
 
-	require.NoError(t, err)
+	assert.Equal(t, errorMessage, err.Error())
 	assert.Equal(t, 0, len(beforeInsert))
 	assert.Equal(t, len(locationToInsert), len(result))
 }
