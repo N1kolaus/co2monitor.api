@@ -8,8 +8,8 @@ import (
 	"gorm.io/gorm"
 )
 
-func SetupLocationRouter(db *gorm.DB, method, route string, handler gin.HandlerFunc) (*http.Request, *httptest.ResponseRecorder) {
-	router := gin.New()
+func SetupLocationRouter(db *gorm.DB, method, route string, requestRoute string, handler gin.HandlerFunc) (*http.Request, *httptest.ResponseRecorder) {
+	router := gin.Default()
 
 	switch method {
 	case http.MethodGet:
@@ -24,13 +24,11 @@ func SetupLocationRouter(db *gorm.DB, method, route string, handler gin.HandlerF
 		panic("Unsupported HTTP method")
 	}
 
-	req, err := http.NewRequest(method, route, nil)
+	writer := httptest.NewRecorder()
+	req, err := http.NewRequest(method, requestRoute, nil)
 	if err != nil {
 		panic(err)
 	}
-
-	req.Header.Set("Content-Type", "application/json")
-	writer := httptest.NewRecorder()
 	router.ServeHTTP(writer, req)
 
 	return req, writer
