@@ -5,6 +5,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 
+	"github.com/fminister/co2monitor.api/middleware"
 	"github.com/gin-gonic/gin"
 	"gorm.io/gorm"
 )
@@ -33,4 +34,23 @@ func SetupLocationRouter(db *gorm.DB, method, route string, requestRoute string,
 	router.ServeHTTP(writer, req)
 
 	return req, writer
+}
+
+func SetupMiddlewareRouter() *gin.Engine {
+	router := gin.Default()
+
+	router.GET("/", middleware.RequireApiKey, func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Authorized through middleware"})
+	})
+	router.POST("/", middleware.RequireApiKey, func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Authorized through middleware"})
+	})
+	router.PATCH("/", middleware.RequireApiKey, func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Authorized through middleware"})
+	})
+	router.DELETE("/", middleware.RequireApiKey, func(c *gin.Context) {
+		c.JSON(http.StatusOK, gin.H{"message": "Authorized through middleware"})
+	})
+
+	return router
 }
