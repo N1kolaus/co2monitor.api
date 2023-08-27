@@ -52,9 +52,9 @@ func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
 func (a *APIEnv) CreateLocation(c *gin.Context) {
 	var locations []models.Location
 	if err := c.ShouldBindJSON(&locations); err != nil {
-		log.Errorf(`Could parse location from body. Error: "%s"`, err)
+		log.Errorf(`Could not parse location from body. Error: "%s"`, err)
 		c.JSON(http.StatusBadRequest, gin.H{
-			"error": "Could parse location from body.",
+			"error": "Could not parse location from body.",
 		})
 		return
 	}
