@@ -1,6 +1,7 @@
 package tests
 
 import (
+	"bytes"
 	"net/http"
 	"net/http/httptest"
 
@@ -8,7 +9,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SetupLocationRouter(db *gorm.DB, method, route string, requestRoute string, handler gin.HandlerFunc) (*http.Request, *httptest.ResponseRecorder) {
+func SetupLocationRouter(db *gorm.DB, method, route string, requestRoute string, handler gin.HandlerFunc, requestBody []byte) (*http.Request, *httptest.ResponseRecorder) {
 	router := gin.Default()
 
 	switch method {
@@ -25,7 +26,7 @@ func SetupLocationRouter(db *gorm.DB, method, route string, requestRoute string,
 	}
 
 	writer := httptest.NewRecorder()
-	req, err := http.NewRequest(method, requestRoute, nil)
+	req, err := http.NewRequest(method, requestRoute, bytes.NewBuffer(requestBody))
 	if err != nil {
 		panic(err)
 	}
