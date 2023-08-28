@@ -6,7 +6,8 @@ import (
 )
 
 func SyncDatabase() {
-	db.DB.Db.AutoMigrate(
+	db := db.GetDB()
+	db.AutoMigrate(
 		&models.Co2Data{},
 		&models.Location{},
 	)

@@ -1,9 +1,10 @@
 package db
 
 import (
-	"log"
+	"fmt"
 	"os"
 
+	"github.com/charmbracelet/log"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
@@ -23,7 +24,10 @@ func ConnectToDb() {
 		dsn = os.Getenv("DATABASE_URL")
 	}
 
-	db, err := gorm.Open(postgres.Open(dsn), &gorm.Config{
+	db, err := gorm.Open(postgres.New(postgres.Config{
+		DSN:                  dsn,
+		PreferSimpleProtocol: false, // disables implicit prepared statement usage
+	}), &gorm.Config{
 		Logger: logger.Default.LogMode(logger.Info),
 		NamingStrategy: schema.NamingStrategy{
 			TablePrefix:   "co2monitor.", // schema name
@@ -35,7 +39,14 @@ func ConnectToDb() {
 		log.Fatal("Failed to connect to database. \n", err)
 	}
 
-	log.Println("connected")
+	dbSchema := os.Getenv("POSTGRES_DB")
+	createSchemaCommand := fmt.Sprintf("CREATE  SCHEMA IF NOT EXISTS %s;", dbSchema)
+	result := db.Exec(createSchemaCommand)
+	if result.Error != nil {
+		log.Fatal("Failed to create schema. \n", result.Error)
+	}
+
+	log.Info("Connected to database.")
 	db.Logger = logger.Default.LogMode(logger.Info)
 
 	DB = DbInstance{
