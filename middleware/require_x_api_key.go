@@ -15,7 +15,7 @@ func RequireApiKey(c *gin.Context) {
 
 	if APIKey == "" {
 		c.AbortWithStatusJSON(http.StatusUnauthorized, gin.H{"message": "Unauthorized"})
-		log.Infof(`API-Key was not found or wrong. API-Key: "%s"; URL: "%s"`, APIKey, c.Request.URL)
+		log.Infof(`API-Key was not found or wrong. API-Key: <%s>; URL: <%s>`, APIKey, c.Request.URL)
 		return
 	}
 
@@ -32,6 +32,6 @@ func RequireApiKey(c *gin.Context) {
 		}
 	}
 
-	log.Infof(`Unauthorized API-Key. API-Key: "%s"; URL: "%s"; Method: "%s"; Path: "%s"`, APIKey, c.Request.URL, c.Request.Method, c.FullPath())
+	log.Infof(`Unauthorized API-Key. API-Key: <%s>; URL: <%s>; Method: <%s>; Path: <%s>`, APIKey, c.Request.URL, c.Request.Method, c.FullPath())
 	c.AbortWithStatus(http.StatusUnauthorized)
 }
