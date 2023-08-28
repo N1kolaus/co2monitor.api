@@ -10,7 +10,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func SetupLocationRouter(db *gorm.DB, method, route string, requestRoute string, handler gin.HandlerFunc, requestBody []byte) (*http.Request, *httptest.ResponseRecorder) {
+func SetupRouter(db *gorm.DB, method, route string, requestRoute string, handler gin.HandlerFunc, requestBody []byte) (*http.Request, *httptest.ResponseRecorder) {
 	router := gin.Default()
 
 	switch method {
