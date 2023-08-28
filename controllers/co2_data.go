@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/charmbracelet/log"
@@ -20,9 +21,16 @@ func (a *APIEnv) GetCo2DataBySearch(c *gin.Context) {
 }
 
 func (a *APIEnv) GetLatestCo2Data(c *gin.Context) {
-	c.JSON(http.StatusOK, gin.H{
-		"data": "co2 data",
-	})
+	locationId := c.Param("id")
+
+	co2Data, err := db_calls.GetLatestCo2Data(a.DB, locationId)
+	if err != nil {
+		log.Errorf(`Could not find any co2 data with this locationId: "%s". Error: "%s"`, locationId, err)
+		c.JSON(http.StatusNotFound, fmt.Sprintf(`Could not find any co2 data with this locationId: "%s".`, locationId))
+		return
+	}
+
+	c.JSON(http.StatusOK, co2Data)
 }
 
 func (a *APIEnv) CreateCo2Data(c *gin.Context) {
