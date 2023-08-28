@@ -30,6 +30,8 @@ services:
           - "traefik.http.routers.go-web.entrypoints=http,https"
           - "traefik.http.routers.go-web.tls=true"
           - "traefik.http.middlewares.redirect-to-https.redirectscheme.scheme=https"
+          - "traefik.http.routers.go-web.middlewares=redirect-to-https@docker"
+          - "traefik.http.routers.go-web-secure.rule=Host(`co2.leyrer.io`)"
         restart: unless-stopped
         depends_on:
           - postgres
