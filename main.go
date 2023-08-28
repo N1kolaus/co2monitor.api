@@ -43,9 +43,13 @@ func main() {
 	docs.SwaggerInfo.Title = "CO2 Monitor API"
 	docs.SwaggerInfo.Description = "CO2 Monitor API for the CO2 Monitor project."
 	docs.SwaggerInfo.Version = "1.0"
-	docs.SwaggerInfo.Host = "co2.leyrer.io"
+	docs.SwaggerInfo.Host = os.Getenv("APP_HOST")
 	docs.SwaggerInfo.BasePath = "/api"
-	docs.SwaggerInfo.Schemes = []string{"http"}
+	if os.Getenv("APP_ENV") != "development" {
+		docs.SwaggerInfo.Schemes = []string{"https"}
+	} else {
+		docs.SwaggerInfo.Schemes = []string{"http"}
+	}
 
 	app.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("[%s] - %s \"%s %s %s %d %s %s\"\n",
