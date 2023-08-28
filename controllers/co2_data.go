@@ -11,13 +11,27 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (a *APIEnv) GetCo2DataBySearch(c *gin.Context) {
+func (a *APIEnv) GetCo2DataByTimeFrame(c *gin.Context) {
+	locationId := c.Param("id")
+	period := c.Query("period")
 
-	// duration, _ := time.ParseDuration(hours)
+	if _, err := db_calls.GetLocationById(a.DB, locationId); err != nil {
+		log.Errorf(`Could not find any location with this id: "%s". Error: "%s"`, locationId, err)
+		c.JSON(http.StatusNotFound, fmt.Sprintf(`Could not find any location with this id: "%s".`, locationId))
+		return
+	}
 
-	c.JSON(http.StatusOK, gin.H{
-		"data": "co2 data",
-	})
+	duration := ex.ValidateTimeDuration(period)
+
+	var co2Data []models.Co2Data
+	co2Data, err := db_calls.GetCo2DataByTimeFrame(a.DB, locationId, duration)
+	if err != nil {
+		log.Errorf(`Could not find any co2 data with this locationId: "%s". Error: "%s"`, locationId, err)
+		c.JSON(http.StatusNotFound, fmt.Sprintf(`Could not find any co2 data with this locationId: "%s".`, locationId))
+		return
+	}
+
+	c.JSON(http.StatusOK, co2Data)
 }
 
 func (a *APIEnv) GetLatestCo2Data(c *gin.Context) {
