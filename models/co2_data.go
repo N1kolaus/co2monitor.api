@@ -22,3 +22,9 @@ type Co2DataDto struct {
 	Temp       float32   `json:"temp"`
 	LocationID int       `json:"location_id"`
 }
+
+type Co2DataPostDto struct {
+	CO2        int     `json:"co2"`
+	Temp       float32 `json:"temp"`
+	LocationID int     `json:"location_id"`
+}

@@ -19,5 +19,6 @@ func locationRoutes(superRoute *gin.RouterGroup) {
 		locationRouter.GET("/search", controllers.GetLocationBySearch)
 		locationRouter.POST("/new", controllers.CreateLocation)
 		locationRouter.PATCH("/:id", controllers.UpdateLocation)
+		locationRouter.DELETE("/:id", controllers.DeleteLocation)
 	}
 }

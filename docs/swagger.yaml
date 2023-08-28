@@ -1,0 +1,297 @@
+definitions:
+  models.Co2DataDto:
+    properties:
+      co2:
+        type: integer
+      created_at:
+        type: string
+      id:
+        type: integer
+      location_id:
+        type: integer
+      temp:
+        type: number
+      updated_at:
+        type: string
+    type: object
+  models.Co2DataPostDto:
+    properties:
+      co2:
+        type: integer
+      location_id:
+        type: integer
+      temp:
+        type: number
+    type: object
+  models.LocationDto:
+    properties:
+      created_at:
+        type: string
+      id:
+        type: integer
+      name:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  models.LocationPostDto:
+    properties:
+      name:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /co2data/{id}/latest:
+    get:
+      consumes:
+      - application/json
+      description: Get latest co2 data by passing a location id as parameter.
+      parameters:
+      - description: LocationId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.Co2DataDto'
+        "404":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get latest co2 data for a location
+      tags:
+      - CO2 Data
+  /co2data/{id}/search:
+    get:
+      consumes:
+      - application/json
+      description: Get co2 data by passing a location id as parameter and a time frame
+        as query parameter. The time frame is from now minus [period] (1m, 1h, 1d).
+      parameters:
+      - description: LocationId
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: time frame
+        example: 1m
+        in: query
+        name: period
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.Co2DataDto'
+            type: array
+        "404":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get co2 data in a time frame
+      tags:
+      - CO2 Data
+  /co2data/new:
+    post:
+      consumes:
+      - application/json
+      description: Create co2 data by posting a list of co2 data objects.
+      parameters:
+      - description: New Co2Data
+        in: body
+        name: co2data
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.Co2DataPostDto'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/models.Co2DataDto'
+            type: array
+        "400":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create co2 data for a location
+      tags:
+      - CO2 Data
+  /location:
+    get:
+      consumes:
+      - application/json
+      description: Get all locations.
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LocationDto'
+            type: array
+        "404":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get all locations
+      tags:
+      - Locations
+  /location/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Delete a location by passing the location id as parameter.
+      parameters:
+      - description: LocationId
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: Deleted successfully
+        "404":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Delete a location
+      tags:
+      - Locations
+    patch:
+      consumes:
+      - application/json
+      description: Update a location by posting a location object.
+      parameters:
+      - description: LocationId
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Update Location
+        in: body
+        name: location
+        required: true
+        schema:
+          $ref: '#/definitions/models.LocationPostDto'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/models.LocationDto'
+        "400":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+        "404":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Update a location
+      tags:
+      - Locations
+  /location/new:
+    post:
+      consumes:
+      - application/json
+      description: Create a new location by posting a list of location objects.
+      parameters:
+      - description: New Location
+        in: body
+        name: location
+        required: true
+        schema:
+          items:
+            $ref: '#/definitions/models.LocationPostDto'
+          type: array
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Created
+          schema:
+            items:
+              $ref: '#/definitions/models.LocationDto'
+            type: array
+        "400":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Create a new location
+      tags:
+      - Locations
+  /location/search:
+    get:
+      consumes:
+      - application/json
+      description: Get one or more locations by passing a location id and/or name
+        as parameter.
+      parameters:
+      - description: LocationId
+        example: "1"
+        in: query
+        name: id
+        type: string
+      - description: Name of location
+        example: Office
+        in: query
+        name: name
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            items:
+              $ref: '#/definitions/models.LocationDto'
+            type: array
+        "404":
+          description: Something went wrong, please refer to the error message.
+          schema:
+            type: string
+      security:
+      - ApiKeyAuth: []
+      summary: Get one or more locations with search parameters
+      tags:
+      - Locations
+securityDefinitions:
+  ApiKeyAuth:
+    description: Paste in the api key
+    in: header
+    name: X-API-KEY
+    type: apiKey
+swagger: "2.0"

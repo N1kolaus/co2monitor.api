@@ -12,6 +12,20 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @BasePath /api
+
+// GetLocations godoc
+//
+//	@Summary		Get all locations
+//	@Description	Get all locations.
+//	@Tags			Locations
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	[]models.LocationDto
+//	@Failure		404	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/location [get]
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) GetLocations(c *gin.Context) {
 	locations, err := db_calls.GetLocation(a.DB)
 	if err != nil {
@@ -26,6 +40,20 @@ func (a *APIEnv) GetLocations(c *gin.Context) {
 	c.JSON(http.StatusOK, locationDto)
 }
 
+// GetLocationBySearch godoc
+//
+//	@Summary		Get one or more locations with search parameters
+//	@Description	Get one or more locations by passing a location id and/or name as parameter.
+//	@Tags			Locations
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	[]models.LocationDto
+//	@Failure		404	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/location/search [get]
+//	@Param			id	query		string	 	false	"LocationId" example(1)
+//	@Param			name	query		string	 	false	"Name of location" example(Office)
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
 	id := c.Query("id")
 	name := c.Query("name")
@@ -43,6 +71,19 @@ func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
 	c.JSON(http.StatusOK, locationDto)
 }
 
+// CreateLocation godoc
+//
+//	@Summary		Create a new location
+//	@Description	Create a new location by posting a list of location objects.
+//	@Tags			Locations
+//	@Accept			json
+//	@Produce		json
+//	@Success		201		{object}	[]models.LocationDto
+//	@Failure		400	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/location/new [post]
+//	@Param			location	body		[]models.LocationPostDto	 true	"New Location"
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) CreateLocation(c *gin.Context) {
 	var locations []models.Location
 	if err := c.ShouldBindJSON(&locations); err != nil {
@@ -70,6 +111,21 @@ func (a *APIEnv) CreateLocation(c *gin.Context) {
 	c.JSON(http.StatusCreated, locationDto)
 }
 
+// UpdateLocation godoc
+//
+//	@Summary		Update a location
+//	@Description	Update a location by posting a location object.
+//	@Tags			Locations
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	models.LocationDto
+//	@Failure		400	{object} string	"Something went wrong, please refer to the error message."
+//	@Failure		404	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/location/{id} [patch]
+//	@Param			id	path		int	 	true	"LocationId"
+//	@Param			location	body		models.LocationPostDto	 true	"Update Location"
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) UpdateLocation(c *gin.Context) {
 	locationId := c.Param("id")
 
@@ -105,6 +161,19 @@ func (a *APIEnv) UpdateLocation(c *gin.Context) {
 	c.JSON(http.StatusOK, locationDto)
 }
 
+// DeleteLocation godoc
+//
+//	@Summary		Delete a location
+//	@Description	Delete a location by passing the location id as parameter.
+//	@Tags			Locations
+//	@Accept			json
+//	@Produce		json
+//	@Success		204 "Deleted successfully"
+//	@Failure		404	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/location/{id} [delete]
+//	@Param			id	path		int	 	true	"LocationId"
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) DeleteLocation(c *gin.Context) {
 	locationId := c.Param("id")
 

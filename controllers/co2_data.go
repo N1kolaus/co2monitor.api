@@ -12,6 +12,22 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
+// @BasePath /api
+
+// GetCo2DataByTimeFrame godoc
+//
+//	@Summary		Get co2 data in a time frame
+//	@Description	Get co2 data by passing a location id as parameter and a time frame as query parameter. The time frame is from now minus [period] (1m, 1h, 1d).
+//	@Tags			CO2 Data
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	[]models.Co2DataDto
+//	@Failure		404	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/co2data/{id}/search [get]
+//	@Param			id	path		int	 	true	"LocationId"
+//	@Param			period	query		string	 	true	"time frame" example(1m)
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) GetCo2DataByTimeFrame(c *gin.Context) {
 	locationId := c.Param("id")
 	period := c.Query("period")
@@ -38,6 +54,19 @@ func (a *APIEnv) GetCo2DataByTimeFrame(c *gin.Context) {
 	c.JSON(http.StatusOK, co2DataDto)
 }
 
+// GetLatestCo2Data godoc
+//
+//	@Summary		Get latest co2 data for a location
+//	@Description	Get latest co2 data by passing a location id as parameter.
+//	@Tags			CO2 Data
+//	@Accept			json
+//	@Produce		json
+//	@Success		200		{object}	models.Co2DataDto
+//	@Failure		404	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/co2data/{id}/latest [get]
+//	@Param			id	path		int	 	true	"LocationId"
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) GetLatestCo2Data(c *gin.Context) {
 	locationId := c.Param("id")
 
@@ -54,6 +83,19 @@ func (a *APIEnv) GetLatestCo2Data(c *gin.Context) {
 	c.JSON(http.StatusOK, co2DataDto)
 }
 
+// CreateCo2Data godoc
+//
+//	@Summary		Create co2 data for a location
+//	@Description	Create co2 data by posting a list of co2 data objects.
+//	@Tags			CO2 Data
+//	@Accept			json
+//	@Produce		json
+//	@Success		201		{object}	[]models.Co2DataDto
+//	@Failure		400	{object} string	"Something went wrong, please refer to the error message."
+//	@Router			/co2data/new [post]
+//	@Param			co2data	body		[]models.Co2DataPostDto	 true	"New Co2Data"
+//
+// @Security ApiKeyAuth
 func (a *APIEnv) CreateCo2Data(c *gin.Context) {
 	var co2Data []models.Co2Data
 	if err := c.ShouldBindJSON(&co2Data); err != nil {

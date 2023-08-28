@@ -17,3 +17,7 @@ type LocationDto struct {
 	UpdatedAt time.Time `json:"updated_at"`
 	Name      string    `json:"name"`
 }
+
+type LocationPostDto struct {
+	Name string `json:"name"`
+}

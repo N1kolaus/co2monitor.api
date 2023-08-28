@@ -8,8 +8,11 @@ import (
 	"time"
 
 	"github.com/charmbracelet/log"
+	swaggerFiles "github.com/swaggo/files"     // swagger embed files
+	ginSwagger "github.com/swaggo/gin-swagger" // gin-swagger middleware
 
 	"github.com/fminister/co2monitor.api/db"
+	"github.com/fminister/co2monitor.api/docs"
 	"github.com/fminister/co2monitor.api/initializers"
 	"github.com/fminister/co2monitor.api/routes"
 	"github.com/gin-contrib/gzip"
@@ -22,6 +25,10 @@ func init() {
 	initializers.SyncDatabase()
 }
 
+// @securityDefinitions.apikey ApiKeyAuth
+// @in header
+// @name X-API-KEY
+// @description Paste in the api key
 func main() {
 	f, _ := os.Create("logs/gin.log")
 	gin.DefaultWriter = io.MultiWriter(f, os.Stdout)
@@ -32,6 +39,13 @@ func main() {
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
 	app := gin.New()
+
+	docs.SwaggerInfo.Title = "CO2 Monitor API"
+	docs.SwaggerInfo.Description = "CO2 Monitor API for the CO2 Monitor project."
+	docs.SwaggerInfo.Version = "1.0"
+	docs.SwaggerInfo.Host = "localhost:8080"
+	docs.SwaggerInfo.BasePath = "/api"
+	docs.SwaggerInfo.Schemes = []string{"http"}
 
 	app.Use(gin.LoggerWithFormatter(func(param gin.LogFormatterParams) string {
 		return fmt.Sprintf("[%s] - %s \"%s %s %s %d %s %s\"\n",
@@ -51,8 +65,10 @@ func main() {
 	router := app.Group("/api")
 	routes.AddRoutes(router)
 
+	app.GET("/swagger/*any", ginSwagger.WrapHandler(swaggerFiles.Handler))
+
 	app.NoRoute(func(c *gin.Context) {
-		c.JSON(http.StatusNotFound, gin.H{"message": "Not found"})
+		c.JSON(http.StatusNotFound, gin.H{"message": "The requested route does not exist."})
 	})
 
 	app.Run()
