@@ -14,8 +14,8 @@ func co2DataRoutes(superRoute *gin.RouterGroup) {
 	co2DataRouter := superRoute.Group("/co2data")
 	co2DataRouter.Use(middleware.RequireApiKey)
 	{
-		co2DataRouter.GET("/search", controllers.GetCo2DataBySearch)
-		co2DataRouter.GET("/latest", controllers.GetLatestCo2Data)
+		co2DataRouter.GET("/:id/search", controllers.GetCo2DataByTimeFrame)
+		co2DataRouter.GET("/:id/latest", controllers.GetLatestCo2Data)
 		co2DataRouter.POST("/new", controllers.CreateCo2Data)
 	}
 

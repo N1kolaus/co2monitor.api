@@ -18,7 +18,7 @@ func TestGetLatestCo2Data_ShouldReturnSingleCo2Data(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/:id", "/1", api.GetLatestCo2Data, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/:id/latest", "/1/latest", api.GetLatestCo2Data, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -44,7 +44,7 @@ func TestGetLatestCo2Data_ShouldReturnErrorLocationIdUnknown(t *testing.T) {
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
 	locationId := "99"
-	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/:id", fmt.Sprintf(`/%s`, locationId), api.GetLatestCo2Data, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/:id/latest", fmt.Sprintf(`/%s/latest`, locationId), api.GetLatestCo2Data, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
