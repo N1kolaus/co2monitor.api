@@ -26,7 +26,6 @@ require (
 	github.com/gabriel-vasile/mimetype v1.4.2 // indirect
 	github.com/gin-contrib/gzip v0.0.6 // indirect
 	github.com/gin-contrib/sse v0.1.0 // indirect
-	github.com/gin-gonic/autotls v0.0.5 // indirect
 	github.com/gin-gonic/gin v1.9.1 // indirect
 	github.com/githubnemo/CompileDaemon v1.4.0 // indirect
 	github.com/glebarez/go-sqlite v1.21.2 // indirect
@@ -78,7 +77,6 @@ require (
 	golang.org/x/arch v0.4.0 // indirect
 	golang.org/x/crypto v0.12.0 // indirect
 	golang.org/x/net v0.14.0 // indirect
-	golang.org/x/sync v0.3.0 // indirect
 	golang.org/x/sys v0.11.0 // indirect
 	golang.org/x/text v0.12.0 // indirect
 	golang.org/x/tools v0.12.0 // indirect

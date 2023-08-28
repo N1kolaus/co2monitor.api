@@ -16,7 +16,6 @@ import (
 	"github.com/fminister/co2monitor.api/initializers"
 	"github.com/fminister/co2monitor.api/routes"
 	"github.com/gin-contrib/gzip"
-	"github.com/gin-gonic/autotls"
 	"github.com/gin-gonic/gin"
 )
 
@@ -40,8 +39,6 @@ func main() {
 	log.SetOutput(io.MultiWriter(f, os.Stdout))
 
 	app := gin.New()
-
-	log.Fatal(autotls.Run(app, os.Getenv("APP_HOST")))
 
 	docs.SwaggerInfo.Title = "CO2 Monitor API"
 	docs.SwaggerInfo.Description = "CO2 Monitor API for the CO2 Monitor project."
