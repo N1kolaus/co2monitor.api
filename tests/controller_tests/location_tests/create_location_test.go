@@ -17,7 +17,7 @@ func TestCreateLocation_ShouldCreateSingleLocation(t *testing.T) {
 	f := tests.BaseFixture{}
 	f.Setup(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, tests.LocationsToJSON([]models.Location{tests.Locations[0]}))
+	req, writer := tests.SetupRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, tests.LocationsToJSON([]models.Location{tests.Locations[0]}))
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -44,7 +44,7 @@ func TestCreateLocation_ShouldCreateMultipleLocations(t *testing.T) {
 	f := tests.BaseFixture{}
 	f.Setup(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, tests.LocationsToJSON([]models.Location{tests.Locations[0], tests.Locations[1]}))
+	req, writer := tests.SetupRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, tests.LocationsToJSON([]models.Location{tests.Locations[0], tests.Locations[1]}))
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -78,7 +78,7 @@ func TestCreateLocation_ShouldReturnErrorMissingNameInJSON(t *testing.T) {
 			Name: "",
 		},
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -112,7 +112,7 @@ func TestCreateLocation_ShouldReturnErrorNameToShortInJSON(t *testing.T) {
 			Name: "a",
 		},
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -141,7 +141,7 @@ func TestCreateLocation_ShouldReturnErrorNameAlreadyExistsInDb(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, tests.LocationsToJSON([]models.Location{tests.Locations[0]}))
+	req, writer := tests.SetupRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, tests.LocationsToJSON([]models.Location{tests.Locations[0]}))
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -169,7 +169,7 @@ func TestCreateLocation_ShouldReturnErrorWrongBinding(t *testing.T) {
 		},
 		Name: "updated location",
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPost, "/new", "/new", api.CreateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)

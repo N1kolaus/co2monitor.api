@@ -17,7 +17,7 @@ func TestDeleteLocation_ShouldDeleteLocation(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodDelete, "/:id", "/1", api.DeleteLocation, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodDelete, "/:id", "/1", api.DeleteLocation, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -42,7 +42,7 @@ func TestDeleteLocation_ShouldReturnErrorUnknownId(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodDelete, "/:id", "/99", api.DeleteLocation, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodDelete, "/:id", "/99", api.DeleteLocation, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)

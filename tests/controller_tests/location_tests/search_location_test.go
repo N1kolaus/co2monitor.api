@@ -17,7 +17,7 @@ func TestGetLocationBySearch_ShouldReturnEmptyList(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodGet, "/search", "/search?id=999&name=not in database", api.GetLocationBySearch, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/search", "/search?id=999&name=not in database", api.GetLocationBySearch, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -41,7 +41,7 @@ func TestGetLocationBySearch_ShouldReturnLocationById(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodGet, "/search", "/search?id=2", api.GetLocationBySearch, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/search", "/search?id=2", api.GetLocationBySearch, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -65,7 +65,7 @@ func TestGetLocationBySearch_ShouldReturnLocationByName(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodGet, "/search", "/search?name=test location 2", api.GetLocationBySearch, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/search", "/search?name=test location 2", api.GetLocationBySearch, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -88,7 +88,7 @@ func TestGetLocationBySearch_ShouldReturnLocationByIdAndName(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodGet, "/search", "/search?id=1&name=test location 2", api.GetLocationBySearch, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/search", "/search?id=1&name=test location 2", api.GetLocationBySearch, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)

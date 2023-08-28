@@ -16,7 +16,7 @@ func TestGetLocation_ShouldReturnEmptyList(t *testing.T) {
 	f := tests.BaseFixture{}
 	f.Setup(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodGet, "/", "/", api.GetLocations, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/", "/", api.GetLocations, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -40,7 +40,7 @@ func TestGetLocation_ShouldReturnAllLocations(t *testing.T) {
 	f.Setup(t)
 	f.AddDummyData(t)
 	api := &controllers.APIEnv{DB: f.Db}
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodGet, "/", "/", api.GetLocations, nil)
+	req, writer := tests.SetupRouter(f.Db, http.MethodGet, "/", "/", api.GetLocations, nil)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)

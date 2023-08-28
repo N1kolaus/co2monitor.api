@@ -25,7 +25,7 @@ func TestUpdateLocation_ShouldUpdateLocation(t *testing.T) {
 		Name: "updated location",
 	}
 	requestBody, _ := json.Marshal(updatedLocation)
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -59,7 +59,7 @@ func TestUpdateLocation_ShouldReturnErrorUnknownId(t *testing.T) {
 		},
 		Name: "updated location",
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPatch, "/:id", "/99", api.UpdateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPatch, "/:id", "/99", api.UpdateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -85,7 +85,7 @@ func TestUpdateLocation_ShouldReturnErrorMissingNameInJSON(t *testing.T) {
 	requestBody, _ := json.Marshal(models.Location{
 		Name: "",
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -116,7 +116,7 @@ func TestUpdateLocation_ShouldReturnErrorNameToShortInJSON(t *testing.T) {
 	requestBody, _ := json.Marshal(models.Location{
 		Name: "a",
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
@@ -148,7 +148,7 @@ func TestUpdateLocation_ShouldReturnErrorWrongBinding(t *testing.T) {
 			Name: "a",
 		},
 	})
-	req, writer := tests.SetupLocationRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
+	req, writer := tests.SetupRouter(f.Db, http.MethodPatch, "/:id", "/1", api.UpdateLocation, requestBody)
 	defer f.Teardown(t)
 
 	body, err := io.ReadAll(writer.Body)
