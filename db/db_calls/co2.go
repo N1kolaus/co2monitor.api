@@ -8,7 +8,7 @@ import (
 	"gorm.io/gorm"
 )
 
-func GetCo2DataByTimeFrame(db *gorm.DB, locationId int, hours time.Duration) ([]models.Co2Data, error) {
+func GetCo2DataByTimeFrame(db *gorm.DB, locationId string, hours time.Duration) ([]models.Co2Data, error) {
 	var co2Data []models.Co2Data
 
 	err := db.Where("location_id = ? AND created_at > ?", locationId, time.Now().Add(-hours)).Find(&co2Data).Error

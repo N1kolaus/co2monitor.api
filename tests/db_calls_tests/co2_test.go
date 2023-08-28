@@ -40,7 +40,7 @@ func TestGetCo2DataByTimeFrame_ShouldReturnLastTwoValues(t *testing.T) {
 		},
 	}
 	f.Db.Create(&newData)
-	result, err := db_calls.GetCo2DataByTimeFrame(f.Db, 1, 24*time.Hour)
+	result, err := db_calls.GetCo2DataByTimeFrame(f.Db, "1", 24*time.Hour)
 
 	require.NoError(t, err)
 	assert.Equal(t, 2, len(newData))
@@ -57,7 +57,7 @@ func TestGetCo2DataByTimeFrame_ShouldReturnEmptyList(t *testing.T) {
 	f.AddDummyData(t)
 	defer f.Teardown(t)
 
-	result, err := db_calls.GetCo2DataByTimeFrame(f.Db, 1, 24*time.Hour)
+	result, err := db_calls.GetCo2DataByTimeFrame(f.Db, "1", 24*time.Hour)
 
 	require.NoError(t, err)
 	assert.Equal(t, 0, len(result))
