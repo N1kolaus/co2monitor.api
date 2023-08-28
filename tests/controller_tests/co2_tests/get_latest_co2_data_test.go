@@ -35,7 +35,6 @@ func TestGetLatestCo2Data_ShouldReturnSingleCo2Data(t *testing.T) {
 	assert.Equal(t, tests.CO2[0].CO2, responseData.CO2)
 	assert.Equal(t, tests.CO2[0].Temp, responseData.Temp)
 	assert.Equal(t, tests.CO2[0].LocationID, responseData.LocationID)
-	assert.Equal(t, tests.CO2[0].CreatedAt, responseData.CreatedAt)
 }
 
 func TestGetLatestCo2Data_ShouldReturnErrorLocationIdUnknown(t *testing.T) {

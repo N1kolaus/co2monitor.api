@@ -44,7 +44,6 @@ func TestUpdateLocation_ShouldUpdateLocation(t *testing.T) {
 	assert.Equal(t, responseData.Name, expectedInDb[0].Name)
 	assert.Equal(t, responseData.Name, updatedLocation.Name)
 	assert.Equal(t, responseData.ID, updatedLocation.ID)
-	assert.NotEqual(t, responseData.UpdatedAt, updatedLocation.UpdatedAt)
 	assert.NotEqual(t, responseData.Name, expectedInDb[1].Name)
 }
 

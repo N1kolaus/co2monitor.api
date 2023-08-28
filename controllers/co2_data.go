@@ -5,6 +5,7 @@ import (
 	"net/http"
 
 	"github.com/charmbracelet/log"
+	"github.com/dranikpg/dto-mapper"
 	"github.com/fminister/co2monitor.api/db/db_calls"
 	ex "github.com/fminister/co2monitor.api/extensions"
 	"github.com/fminister/co2monitor.api/models"
@@ -31,7 +32,10 @@ func (a *APIEnv) GetCo2DataByTimeFrame(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, co2Data)
+	var co2DataDto []models.Co2DataDto
+	dto.Map(&co2DataDto, co2Data)
+
+	c.JSON(http.StatusOK, co2DataDto)
 }
 
 func (a *APIEnv) GetLatestCo2Data(c *gin.Context) {
@@ -44,7 +48,10 @@ func (a *APIEnv) GetLatestCo2Data(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, co2Data)
+	var co2DataDto models.Co2DataDto
+	dto.Map(&co2DataDto, co2Data)
+
+	c.JSON(http.StatusOK, co2DataDto)
 }
 
 func (a *APIEnv) CreateCo2Data(c *gin.Context) {
@@ -68,5 +75,8 @@ func (a *APIEnv) CreateCo2Data(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, co2Data)
+	var co2DataDto []models.Co2DataDto
+	dto.Map(&co2DataDto, co2Data)
+
+	c.JSON(http.StatusCreated, co2DataDto)
 }

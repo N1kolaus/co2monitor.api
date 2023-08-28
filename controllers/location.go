@@ -4,6 +4,7 @@ import (
 	"net/http"
 
 	"github.com/charmbracelet/log"
+	"github.com/dranikpg/dto-mapper"
 
 	"github.com/fminister/co2monitor.api/db/db_calls"
 	ex "github.com/fminister/co2monitor.api/extensions"
@@ -19,7 +20,10 @@ func (a *APIEnv) GetLocations(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, locations)
+	var locationDto []models.LocationDto
+	dto.Map(&locationDto, locations)
+
+	c.JSON(http.StatusOK, locationDto)
 }
 
 func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
@@ -33,7 +37,10 @@ func (a *APIEnv) GetLocationBySearch(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, locations)
+	var locationDto []models.LocationDto
+	dto.Map(&locationDto, locations)
+
+	c.JSON(http.StatusOK, locationDto)
 }
 
 func (a *APIEnv) CreateLocation(c *gin.Context) {
@@ -57,7 +64,10 @@ func (a *APIEnv) CreateLocation(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusCreated, locations)
+	var locationDto []models.LocationDto
+	dto.Map(&locationDto, locations)
+
+	c.JSON(http.StatusCreated, locationDto)
 }
 
 func (a *APIEnv) UpdateLocation(c *gin.Context) {
@@ -89,7 +99,10 @@ func (a *APIEnv) UpdateLocation(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, location)
+	var locationDto models.LocationDto
+	dto.Map(&locationDto, location)
+
+	c.JSON(http.StatusOK, locationDto)
 }
 
 func (a *APIEnv) DeleteLocation(c *gin.Context) {
