@@ -55,7 +55,7 @@ func TestGetLatestCo2Data_ShouldReturnErrorLocationIdUnknown(t *testing.T) {
 	if err := json.Unmarshal(body, &errorMessage); err != nil {
 		assert.Error(t, err)
 	}
-	expectedErrorMessage := fmt.Sprintf(`Could not find any co2 data with this locationId: "%s".`, locationId)
+	expectedErrorMessage := fmt.Sprintf(`Could not find any co2 data with this locationId: <%s>.`, locationId)
 
 	assert.Equal(t, http.MethodGet, req.Method, "HTTP request method error")
 	assert.Equal(t, http.StatusNotFound, writer.Code, "HTTP request status code error")
