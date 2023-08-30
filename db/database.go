@@ -40,7 +40,7 @@ func ConnectToDb() {
 	}
 
 	dbSchema := os.Getenv("POSTGRES_DB")
-	createSchemaCommand := fmt.Sprintf("CREATE  SCHEMA IF NOT EXISTS %s;", dbSchema)
+	createSchemaCommand := fmt.Sprintf("CREATE SCHEMA IF NOT EXISTS %s;", dbSchema)
 	result := db.Exec(createSchemaCommand)
 	if result.Error != nil {
 		log.Fatal("Failed to create schema. \n", result.Error)
