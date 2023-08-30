@@ -47,7 +47,6 @@ func ConnectToDb() {
 	}
 
 	log.Info("Connected to database.")
-	db.Logger = logger.Default.LogMode(logger.Info)
 
 	DB = DbInstance{
 		Db: db,
