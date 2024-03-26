@@ -11,6 +11,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/FMinister/co2monitor-api/internal/data"
+
 	"github.com/joho/godotenv"
 )
 
@@ -36,7 +38,7 @@ type config struct {
 type application struct {
 	config config
 	logger *slog.Logger
-	models interface{}
+	models data.Models
 }
 
 func main() {
@@ -87,17 +89,17 @@ func main() {
 		return time.Now().Unix()
 	}))
 
-	// app := &application{
-	// 	config: cfg,
-	// 	logger: logger,
-	// 	models: data.NewModels(db),
-	// }
+	app := &application{
+		config: cfg,
+		logger: logger,
+		models: data.NewModels(db),
+	}
 
-	// err = app.serve()
-	// if err != nil {
-	// 	logger.Error(err.Error())
-	// 	os.Exit(1)
-	// }
+	err = app.serve()
+	if err != nil {
+		logger.Error(err.Error())
+		os.Exit(1)
+	}
 }
 
 func openDB(cfg config) (*sql.DB, error) {
