@@ -9,6 +9,7 @@ import (
 	"os"
 	"runtime"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/FMinister/co2monitor-api/internal/data"
@@ -39,6 +40,7 @@ type application struct {
 	config config
 	logger *slog.Logger
 	models data.Models
+	wg     sync.WaitGroup
 }
 
 func main() {
