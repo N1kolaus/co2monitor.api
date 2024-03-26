@@ -41,6 +41,7 @@ type config struct {
 	cors struct {
 		trustedOrigins []string
 	}
+	maxTimeFrameDays int
 }
 
 type application struct {
@@ -66,6 +67,8 @@ func main() {
 	flag.Float64Var(&cfg.limiter.rps, "limiter-rps", 2, "Rate limiter maximum requests per second")
 	flag.IntVar(&cfg.limiter.burst, "limiter-burst", 4, "Rate limiter maximum burst")
 	flag.BoolVar(&cfg.limiter.enabled, "limiter-enabled", true, "Enable rate limiter")
+
+	flag.IntVar(&cfg.maxTimeFrameDays, "maxTimeFrameDays", 14, "max time frame days for co2 data query")
 
 	flag.Func("cors-trusted-origins", "Trusted CORS origins (space seperated)", func(val string) error {
 		cfg.cors.trustedOrigins = strings.Fields(val)

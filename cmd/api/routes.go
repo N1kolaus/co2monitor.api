@@ -19,5 +19,7 @@ func (app *application) routes() http.Handler {
 
 	router.HandlerFunc(http.MethodGet, "/v2/healthcheck", app.healthcheckHandler)
 
+	router.HandlerFunc(http.MethodGet, "/v2/co2data/:id", app.co2DataByTimeFrameHandler)
+
 	return router
 }
