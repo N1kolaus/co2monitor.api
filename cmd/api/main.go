@@ -15,6 +15,7 @@ import (
 	"github.com/FMinister/co2monitor-api/internal/data"
 
 	"github.com/joho/godotenv"
+	_ "github.com/lib/pq"
 )
 
 type config struct {
