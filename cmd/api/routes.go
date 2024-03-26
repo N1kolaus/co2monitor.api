@@ -10,7 +10,14 @@ import (
 func (app *application) routes() http.Handler {
 	router := httprouter.New()
 
-	router.Handler(http.MethodGet, "/v2/metrics", expvar.Handler())
+	router.NotFound = http.HandlerFunc(app.notFoundResponse)
+	router.MethodNotAllowed = http.HandlerFunc(app.methodNotAllowedResponse)
+
+	if app.config.env != "production" {
+		router.Handler(http.MethodGet, "/v2/metrics", expvar.Handler())
+	}
+
+	router.HandlerFunc(http.MethodGet, "/v2/healthcheck", app.healthcheckHandler)
 
 	return router
 }

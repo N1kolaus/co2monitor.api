@@ -13,9 +13,14 @@ import (
 	"time"
 
 	"github.com/FMinister/co2monitor-api/internal/data"
+	"github.com/FMinister/co2monitor-api/internal/vcs"
 
 	"github.com/joho/godotenv"
 	_ "github.com/lib/pq"
+)
+
+var (
+	version = vcs.Version()
 )
 
 type config struct {
@@ -82,6 +87,7 @@ func main() {
 
 	logger.Info("database connection pool established")
 
+	expvar.NewString("version").Set(version)
 	expvar.Publish("goroutines", expvar.Func(func() any {
 		return runtime.NumGoroutine()
 	}))
