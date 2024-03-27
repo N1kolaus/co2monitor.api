@@ -46,7 +46,7 @@ func (m Co2Model) GetByTimeFrame(id int64, timeFrame time.Duration) ([]*Co2Data,
 		SELECT id, created_at, location_id, co2, temp, humidity
 		FROM co2_data
 		WHERE location_id = $1
-		AND created_at >= NOW() - $2
+		AND created_at >= NOW() - Interval '1 second' * $2
 		ORDER BY created_at DESC`
 
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
@@ -54,7 +54,7 @@ func (m Co2Model) GetByTimeFrame(id int64, timeFrame time.Duration) ([]*Co2Data,
 
 	args := []any{
 		id,
-		timeFrame,
+		int64(timeFrame.Seconds()),
 	}
 
 	rows, err := m.DB.QueryContext(ctx, query, args...)
