@@ -104,7 +104,7 @@ func (m LocationModel) Get(id int64) (*Location, error) {
 func (m LocationModel) Update(location *Location) error {
 	query := `
 		UPDATE locations
-		SET name = $2
+		SET name = $2, updated_at = CURRENT_TIMESTAMP
 		WHERE id = $1
 		RETURNING updated_at`
 
