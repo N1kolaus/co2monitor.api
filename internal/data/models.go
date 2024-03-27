@@ -5,7 +5,7 @@ import (
 )
 
 type Models struct {
-	CO2        CO2Model
+	CO2        Co2Model
 	Location   LocationModel
 	Permission PermissionModel
 	Tokens     TokensModel
@@ -13,7 +13,7 @@ type Models struct {
 
 func NewModels(db *sql.DB) Models {
 	return Models{
-		CO2:        CO2Model{DB: db},
+		CO2:        Co2Model{DB: db},
 		Location:   LocationModel{DB: db},
 		Permission: PermissionModel{DB: db},
 		Tokens:     TokensModel{DB: db},
