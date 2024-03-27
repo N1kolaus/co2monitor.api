@@ -1,7 +1,6 @@
 package main
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/FMinister/co2monitor-api/internal/data"
@@ -15,13 +14,13 @@ func (app *application) co2DataLatestHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	// co2Data, err := app.models.Co2Data.GetLatest()
-	// if err != nil {
-	// 	app.serverErrorResponse(w, r, err)
-	// 	return
-	// }
+	co2Data, err := app.models.Co2.GetLatest(id)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"latest": fmt.Sprintf("id: %d", id)}, nil)
+	err = app.writeJSON(w, http.StatusOK, envelope{"latest": co2Data}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -56,13 +55,13 @@ func (app *application) listCo2DataByTimeFrameHandler(w http.ResponseWriter, r *
 		return
 	}
 
-	// co2Data, err := app.models.Co2Data.GetByTimeFrame(timeFrame)
-	// if err != nil {
-	// 	app.serverErrorResponse(w, r, err)
-	// 	return
-	// }
+	co2Data, err := app.models.Co2.GetByTimeFrame(id, timeFrame)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
 
-	err = app.writeJSON(w, http.StatusOK, envelope{"time_frame": fmt.Sprintf("id: %d; time_frame: %v", id, timeFrame)}, nil)
+	err = app.writeJSON(w, http.StatusOK, envelope{"data": co2Data}, nil)
 	if err != nil {
 		app.serverErrorResponse(w, r, err)
 	}
@@ -101,11 +100,11 @@ func (app *application) createCo2DataHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	// co2Data, err := app.models.Co2Data.GetLatest()
-	// if err != nil {
-	// 	app.serverErrorResponse(w, r, err)
-	// 	return
-	// }
+	err = app.models.Co2.Insert(co2Data)
+	if err != nil {
+		app.serverErrorResponse(w, r, err)
+		return
+	}
 
 	err = app.writeJSON(w, http.StatusCreated, envelope{"latest": co2Data}, nil)
 	if err != nil {
