@@ -23,5 +23,9 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodGet, "/v2/co2data/:id", app.listCo2DataByTimeFrameHandler)
 	router.HandlerFunc(http.MethodPost, "/v2/co2data/:id", app.createCo2DataHandler)
 
+	router.HandlerFunc(http.MethodGet, "/v2/location", app.listLocationsHandler)
+	router.HandlerFunc(http.MethodPatch, "/v2/location/:id", app.updateLocationHandler)
+	router.HandlerFunc(http.MethodDelete, "/v2/location/:id", app.deleteLocationHandler)
+
 	return router
 }
