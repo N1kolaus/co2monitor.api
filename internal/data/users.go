@@ -52,11 +52,11 @@ func (m UserModel) Insert(user *User) error {
 	return nil
 }
 
-func (m UserModel) GetByName(name string) (*User, error) {
+func (m UserModel) GetByName(name string) (User, error) {
 	query := `
 		SELECT id, created_at, updated_at, name, token, active
 		FROM users
-		WEHRE name = $1`
+		WHERE name = $1`
 
 	var user User
 
@@ -73,13 +73,43 @@ func (m UserModel) GetByName(name string) (*User, error) {
 	if err != nil {
 		switch {
 		case err == sql.ErrNoRows:
-			return nil, ErrRecordNotFound
+			return User{}, ErrRecordNotFound
 		default:
-			return nil, err
+			return User{}, err
 		}
 	}
 
-	return &user, nil
+	return user, nil
+}
+
+func (m UserModel) GetByID(id int) (User, error) {
+	query := `
+		SELECT id, created_at, updated_at, name, token, active
+		FROM users
+		WHERE id = $1`
+
+	var user User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, id).Scan(
+		&user.ID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+		&user.Name,
+		&user.Token,
+		&user.Active)
+	if err != nil {
+		switch {
+		case err == sql.ErrNoRows:
+			return User{}, ErrRecordNotFound
+		default:
+			return User{}, err
+		}
+	}
+
+	return user, nil
 }
 
 func (m UserModel) Update(user *User) error {
@@ -141,7 +171,7 @@ func (m UserModel) Delete(id int64) error {
 
 func ValidateUser(v *validator.Validator, user *User) {
 	v.Check(user.Name != "", "name", "must be provided")
-	v.Check(len(user.Name) < 3, "name", "must be at least 3 bytes long")
+	v.Check(len(user.Name) > 3, "name", "must be at least 3 bytes long")
 	v.Check(len(user.Name) <= 500, "name", "must not be more than 500 bytes long")
 
 	v.Check(user.Token != "", "token", "must be provided")

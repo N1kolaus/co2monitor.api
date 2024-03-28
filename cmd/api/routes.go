@@ -28,5 +28,10 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v2/location/:id", app.updateLocationHandler)
 	router.HandlerFunc(http.MethodDelete, "/v2/location/:id", app.deleteLocationHandler)
 
+	router.HandlerFunc(http.MethodGet, "/v2/user", app.getUserHandler)
+	router.HandlerFunc(http.MethodPost, "/v2/user", app.createUserHandler)
+	router.HandlerFunc(http.MethodPatch, "/v2/user", app.updateUserHandler)
+	router.HandlerFunc(http.MethodDelete, "/v2/user/:id", app.deleteUserHandler)
+
 	return router
 }
