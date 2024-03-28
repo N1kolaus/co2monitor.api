@@ -14,7 +14,7 @@ type Models struct {
 	Co2        Co2Model
 	Location   LocationModel
 	Permission PermissionModel
-	Tokens     TokensModel
+	User       UserModel
 }
 
 func NewModels(db *sql.DB) Models {
@@ -22,6 +22,6 @@ func NewModels(db *sql.DB) Models {
 		Co2:        Co2Model{DB: db},
 		Location:   LocationModel{DB: db},
 		Permission: PermissionModel{DB: db},
-		Tokens:     TokensModel{DB: db},
+		User:       UserModel{DB: db},
 	}
 }
