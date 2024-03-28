@@ -75,9 +75,9 @@ func (app *application) createCo2DataHandler(w http.ResponseWriter, r *http.Requ
 	}
 
 	var input struct {
-		Co2      int
-		Temp     float64
-		Humidity int
+		Co2      int     `json:"co2"`
+		Temp     float64 `json:"temp"`
+		Humidity int     `json:"humidity"`
 	}
 
 	err = app.readJSON(w, r, &input)
