@@ -169,15 +169,43 @@ func (m UserModel) Delete(id int64) error {
 	return nil
 }
 
+func (m UserModel) GetForToken(token string) (*User, error) {
+	query := `
+		SELECT id, created_at, updated_at, name, token, active
+		FROM users
+		WHERE token = $1
+		AND active = TRUE`
+
+	var user User
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	err := m.DB.QueryRowContext(ctx, query, token).Scan(
+		&user.ID,
+		&user.CreatedAt,
+		&user.UpdatedAt,
+		&user.Name,
+		&user.Token,
+		&user.Active)
+	if err != nil {
+		switch {
+		case err == sql.ErrNoRows:
+			return nil, ErrRecordNotFound
+		default:
+			return nil, err
+		}
+	}
+
+	return &user, nil
+}
+
 func ValidateUser(v *validator.Validator, user *User) {
 	v.Check(user.Name != "", "name", "must be provided")
 	v.Check(len(user.Name) > 3, "name", "must be at least 3 bytes long")
 	v.Check(len(user.Name) <= 500, "name", "must not be more than 500 bytes long")
 
-	v.Check(user.Token != "", "token", "must be provided")
-	v.Check(len(user.Token) >= 32, "token", "must be at least 32 bytes long")
-	v.Check(len(user.Token) <= 72, "token", "must not be more than 72 bytes long")
-	v.Check(verifyToken(user.Token), "token", "must contain at least one number, one uppercase letter, one lowercase letter, and one special character")
+	ValidateToken(v, user.Token)
 }
 
 func verifyToken(s string) bool {
@@ -195,4 +223,11 @@ func verifyToken(s string) bool {
 		}
 	}
 	return hasNumber && hasUpperCase && hasLowercase && hasSpecial
+}
+
+func ValidateToken(v *validator.Validator, token string) {
+	v.Check(token != "", "token", "must be provided")
+	v.Check(len(token) >= 32, "token", "must be at least 32 bytes long")
+	v.Check(len(token) <= 72, "token", "must not be more than 72 bytes long")
+	v.Check(verifyToken(token), "token", "must contain at least one number, one uppercase letter, one lowercase letter, and one special character")
 }

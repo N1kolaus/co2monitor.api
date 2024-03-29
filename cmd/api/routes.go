@@ -33,5 +33,5 @@ func (app *application) routes() http.Handler {
 	router.HandlerFunc(http.MethodPatch, "/v2/user", app.updateUserHandler)
 	router.HandlerFunc(http.MethodDelete, "/v2/user/:id", app.deleteUserHandler)
 
-	return router
+	return app.authenticate(router)
 }
